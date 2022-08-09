@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     Rigidbody _rigidbody;
+    [SerializeField] Joystick _joystick;
 
     [SerializeField] float speed = 10f;
     // Start is called before the first frame update
@@ -16,13 +17,21 @@ public class PlayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+        float horizontal = _joystick.Horizontal;// Input.GetAxisRaw("Horizontal");
+        float vertical = _joystick.Vertical;// Input.GetAxisRaw("Vertical");
+        
         Vector3 direction = new Vector3(horizontal, 0, vertical).normalized;
 
         if (direction.magnitude >= 0.1f)
         {
-            _rigidbody.velocity = (direction * Time.deltaTime * speed);
+            var dir = (direction * Time.deltaTime * speed);
+            _rigidbody.velocity = new Vector3(dir.x, _rigidbody.velocity.y, dir.z);
+            transform.rotation = Quaternion.LookRotation(_rigidbody.velocity);
         }
+    }
+
+    public void Stop()
+    {
+        _rigidbody.velocity = Vector3.zero;
     }
 }

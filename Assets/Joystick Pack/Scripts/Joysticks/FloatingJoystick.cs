@@ -5,8 +5,11 @@ using UnityEngine.EventSystems;
 
 public class FloatingJoystick : Joystick
 {
+    [SerializeField] PlayerManager playerManager;
     protected override void Start()
     {
+        playerManager = FindObjectOfType<PlayerManager>();
+
         base.Start();
         background.gameObject.SetActive(false);
     }
@@ -22,5 +25,7 @@ public class FloatingJoystick : Joystick
     {
         background.gameObject.SetActive(false);
         base.OnPointerUp(eventData);
+
+        playerManager.Stop();
     }
 }
